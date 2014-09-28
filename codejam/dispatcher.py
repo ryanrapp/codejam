@@ -16,6 +16,7 @@ class Dispatcher(object):
   def __init__(self, crawler, judge):
     self.crawler = crawler
     self.judge = judge
+    self.feed_results = {}
 
   def _analyze_result(self, feed_id, t, result):
     """Analyze result and set next poll interval"""
@@ -24,30 +25,38 @@ class Dispatcher(object):
 
       for post in result:
         staleness = t - post[0]
-        myid = (feed_id, post[0])
+        myid = post[3]
         if (myid not in self.scraped_articles or
             staleness < self.scraped_articles[myid]):
-          self.scraped_articles[(feed_id, post[0])] = staleness
+          if myid not in self.scraped_articles:
+            self.feed_results[feed_id].append(post)
+          self.scraped_articles[myid] = staleness
 
-      self.interval = self.model.predict_interval(result)
-      #print self.interval
+      self.interval = self.model.get_interval(self.feed_results[feed_id])
+
+  def dispatch(self, feed_id, t):
+    result = self.crawler.crawl(feed_id, t)
+    self._analyze_result(feed_id, t, result)
 
   def process_feed(self, feed_id, model):
     t = self._START_TIME
-    self.start_interval = 1000
+    self.start_interval = 100
     self.interval = 100
     self.scraped_articles = {}
     self.arima_q = 10
     self.result_paces = []
     self.model = model
+    self.feed_results[feed_id] = []
 
     article_target = 0
 
     t += self.start_interval
 
     while t < self._END_TIME:
-      result = self.crawler.crawl(feed_id, t)
-      self._analyze_result(feed_id, t, result)
+      self.dispatch(feed_id, t)
       t += self.interval
 
-    self.judge.score_results(feed_id, self.scraped_articles)
+    if self.model.do_last:
+      self.dispatch(feed_id, self._END_TIME)
+
+    return self.judge.score_results(feed_id, self.scraped_articles)

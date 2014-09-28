@@ -1,54 +1,57 @@
 import numpy as np
+import scipy
+import pprint
 
 from codejam import trainer, dispatcher
 from codejam import mockcrawler
 from codejam import judge
-from codejam.models import arima
+from codejam.models import arima, exponential, tree, ols
 
-mytrainer = trainer.Trainer()
-mytrainer.train()
+def jam():
+  mytrainer = trainer.Trainer()
+  mytrainer.train()
 
-mytrainer.draw_hist('22425')
+  #mytrainer.draw_hist('254130')
 
-mycrawler = mockcrawler.MockCrawler(mytrainer)
-myjudge = judge.Judge(mycrawler)
-arima_model = arima.ArimaModel(3, 10)
-d = dispatcher.Dispatcher(mycrawler, myjudge)
+  arima_model = arima.ArimaModel(3, 5)
+  exponential_model = exponential.ExponentialModel(.8, 20)
+  tree_model = tree.TreeModel()
+  ols_model = ols.OLSModel()
 
-#d.process_feed('22425', arima_model)
-d.process_feed('254130', arima_model)
-#d.process_feed('649380', arima_model)
+  current_model = tree_model
+
+  #mymodels = [arima_model, exponential_model, tree_model, ols_model]
+  mymodels = [exponential_model]
+  myfeeds = ['254130', '649380', '703143']
+
+  f = myfeeds[0]
+
+  mydata = mytrainer.get_data()
+
+  total_score = 0
+  total_article_score = 0
+  total_missed_penalty = 0
+  total_efficiency_bonus = 0
+
+  for feed_id in mydata:
+    m = exponential.ExponentialModel(.8, 20)
+    print "Model: %s" % m.description
+    mycrawler = mockcrawler.MockCrawler(mytrainer)
+    myjudge = judge.Judge(mycrawler)
+    d = dispatcher.Dispatcher(mycrawler, myjudge)
+    score, article_score, missed_penalty, efficiency_bonus = d.process_feed(feed_id, m)
+    total_score += score
+    total_article_score += article_score
+    total_missed_penalty += missed_penalty
+    total_efficiency_bonus += efficiency_bonus
+
+  pprint.pprint({
+    'total_score': total_score,
+    'total_article_score': total_article_score,
+    'total_missed_penalty': total_missed_penalty,
+    'total_efficiency_bonus': total_efficiency_bonus
+  })
 
 
-
-# # Create a random dataset
-# rng = np.random.RandomState(2)
-# X = np.sort(5 * rng.rand(80, 1), axis=0)
-# y = np.sin(X).ravel()
-# y[::5] += 3 * (0.5 - rng.rand(16))
-#
-# # Fit regression model
-# from sklearn.tree import DecisionTreeRegressor
-#
-# clf_1 = DecisionTreeRegressor(max_depth=2)
-# clf_2 = DecisionTreeRegressor(max_depth=3)
-# clf_1.fit(X, y)
-# clf_2.fit(X, y)
-#
-# # Predict
-# X_test = np.arange(0.0, 5.0, 0.01)[:, np.newaxis]
-# y_1 = clf_1.predict(X_test)
-# y_2 = clf_2.predict(X_test)
-#
-# # Plot the results
-# import matplotlib.pyplot as plt
-#
-# plt.figure()
-# plt.scatter(X, y, c="k", label="data")
-# #plt.plot(X_test, y_1, c="g", label="max_depth=2", linewidth=2)
-# plt.plot(X_test, y_2, c="r", label="max_depth=3", linewidth=2)
-# plt.xlabel("data")
-# plt.ylabel("target")
-# plt.title("Decision Tree Regression")
-# plt.legend()
-# plt.show()
+if __name__ == "__main__":
+  jam()

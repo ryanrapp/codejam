@@ -26,6 +26,7 @@ class Trainer(object):
 
   def prepare_data(self, file):
     processed = 0
+    myid = 0
     for line in file:
       data = line.split()
       feed_id = data[0]
@@ -44,11 +45,11 @@ class Trainer(object):
           daily_seconds = date_et.hour * 60 * 60 + date_et.minute * 60 + date_et.second
           daily_minutes = date_et.hour * 60 + date_et.minute
           is_business_day = date_et.weekday() < 5
-          datapoint = (seconds,date_et.weekday(), date_et.hour, )
+          datapoint = (seconds,date_et.weekday(), date_et.hour, myid)
           feed_data.append(datapoint)
           x.append(date_et.weekday())
-
           day_of_week.append(date_et.hour)
+          myid += 1
 
         sorted_feed_data = sorted(feed_data, key=lambda datapoint: datapoint[0])
 

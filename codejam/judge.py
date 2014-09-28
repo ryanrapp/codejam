@@ -36,3 +36,5 @@ class Judge(object):
     print "total_score: %d" % score
 
     print "----"
+
+    return (score, article_score, missed_penalty, efficiency_bonus)
