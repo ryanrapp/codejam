@@ -8,7 +8,7 @@ from codejam.models import arima
 mytrainer = trainer.Trainer()
 mytrainer.train()
 
-#mytrainer.draw_hist('22425')
+mytrainer.draw_hist('22425')
 
 mycrawler = mockcrawler.MockCrawler(mytrainer)
 myjudge = judge.Judge(mycrawler)
