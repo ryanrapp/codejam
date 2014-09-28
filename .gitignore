@@ -1,0 +1,9 @@
+/bin
+/build
+/include
+/lib
+/dist
+.DS_Store
+.Python
+*.pyc
+*.egg-info
