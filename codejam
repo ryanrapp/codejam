@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+cd appfiles
+source bin/activate
+python codejam.py
