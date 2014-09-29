@@ -1,4 +1,4 @@
-#Calculate Arima Model
+#Define exponential model
 from codejam.models import basemodel
 
 class ExponentialModel(basemodel.BaseModel):
@@ -8,12 +8,12 @@ class ExponentialModel(basemodel.BaseModel):
     self.d = d
     self.q = q
 
-  def adjust_prediction(self, predicted_y):
-    return max(predicted_y,10)
+  def adjust_prediction(self, t, predicted_y):
+    return max(predicted_y * 10,10)
 
-  def predict_interval(self, results):
+  def predict_interval(self, t, results):
     results = results[len(results) - self.q:]
-    if len(results) < 9:
+    if len(results) < self.q:
       return 1000
 
     exp_sum = 0

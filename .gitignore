@@ -1,8 +1,8 @@
-/bin
-/build
-/include
-/lib
-/dist
+/appfiles/bin
+/appfiles/build
+/appfiles/include
+/appfiles/lib
+/appfiles/dist
 .DS_Store
 .Python
 *.pyc

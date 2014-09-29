@@ -14,30 +14,37 @@ class TreeModel(basemodel.BaseModel):
     self.clf.fit(X, y)
 
   def adjust_prediction(self, predicted_y):
-    return max(predicted_y * .4, 1)
+    return max(predicted_y, 1)
 
   def predict_interval(self, result):
-    y_hat = [100]
+    y_hat = [1000]
     self.results.append(result)
 
     clf = tree.DecisionTreeRegressor()
 
-    x_stack = []
+    window_length = 2
+    window = []
     X = []
     y = []
-    for i in range(0, len(result)):
-      if i > 1:
-        x_stack.append(result[i][0] - result[i-1][0])
-        if i < len(result) - 1:
-          x = [10] * (len(result) - i - 1)
-          x.extend(x_stack)
-          X.append(x)
-          y.append(result[i+1][0] - result[i][0])
+
+    for i in range(1, len(result)):
+      delta = result[i][0] - result[i-1][0]
+      window.append(delta)
+      if len(window) > window_length:
+        window.pop(0)
+
+      x = window[:]
+      x.extend([result[i][1], result[i][2]])
+
+      if len(window) == window_length and i+1 < len(result):
+        X.append(x)
+        y.append(result[i+1][0] - result[i][0])
 
     if len(X) != len(y):
       raise Exception('X and y need to be same length')
-    if len(X) > 2:
+    if len(X) > 3:
       clf.fit(X, y)
-      y_hat = clf.predict(x_stack)
+      y_hat = clf.predict(x)
+      pprint.pprint({'y_hat':y_hat})
 
     return y_hat[0]

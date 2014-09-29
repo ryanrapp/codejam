@@ -1,4 +1,4 @@
-#Defines decision tree model
+#Define ols regression learning
 from codejam.models import basemodel
 from sklearn import linear_model
 import pprint
@@ -35,7 +35,7 @@ class OLSModel(basemodel.BaseModel):
       raise Exception('X and y need to be same length')
     if len(X) > 2:
       clf.fit(X, y)
-      y_hat = clf.predict(len(result))
+      y_hat = clf.predict([len(result)])
 
       pprint.pprint({'X':X, 'y':y, 'y_hat':y_hat})
 
