@@ -1,12 +1,10 @@
 #Define dispatcher class
 
 import datetime
-from matplotlib import pyplot as plt
 import dateutil.parser
 from dateutil import tz
 import json
 import numpy as np
-import matplotlib.mlab as mlab
 import pdb
 import pprint
 from codejam import utils

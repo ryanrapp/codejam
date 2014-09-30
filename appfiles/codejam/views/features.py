@@ -2,7 +2,7 @@
 # as a set of features for the model
 
 import datetime
-from matplotlib import pyplot as plt
+#from matplotlib import pyplot as plt
 
 import json
 import numpy as np
@@ -116,7 +116,7 @@ class Features(object):
     for article in data:
       x.append(article[feature])
 
-    n, bins, patches = plt.hist(x, 50, normed=1, facecolor='green', alpha=0.75)
+    #n, bins, patches = plt.hist(x, 50, normed=1, facecolor='green', alpha=0.75)
 
     #plt.show()
 
