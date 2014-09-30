@@ -3,7 +3,7 @@ import scipy
 import pprint
 import datetime
 
-from codejam.controllers import trainer, dispatcher
+from codejam.controllers import dispatcher
 from codejam.controllers import mockcrawler, apicrawler
 from codejam.models import arima, exponential, tree, ols
 from codejam.views import features
