@@ -22,7 +22,7 @@ class APIPerformance(baseperformance.BasePerformance):
       poll_times.append(poll_time)
 
     params = {'feed_id': str(feed_id), 'poll_times': poll_times}
-    pprint.pprint(params)
+    #pprint.pprint(params)
     r = requests.post(self.endpoint, data=params)
 
     response = r.json()
