@@ -41,7 +41,7 @@ def jam():
 
   start_date = mydateutil.to_datetime(date)
   end_date = start_date + datetime.timedelta(hours=23, minutes=59, seconds=59)
-  
+
   print "Date range: %s -> %s" % (start_date, end_date)
 
   start_time = mydateutil.to_elapsed_seconds(start_date)
@@ -53,7 +53,7 @@ def jam():
     mydateutil = 0
 
     #mycrawler = mockcrawler.MockCrawler(mydata)
-    mycrawler = apicrawler.APICrawler(dataview)
+    mycrawler = apicrawler.APICrawler(dataview, api_url)
     #view = mockperformance.MockPerformance(mycrawler)
     view = apiperformance.APIPerformance(mycrawler)
 
